@@ -5,7 +5,12 @@ import numpy as np
 main = []
 ticker = 'EURUSD'
 dir_ = 'D:\\TickData_UZ\\'
-min_ = 1
+min_ = 3
+
+def vwap(data):
+    x = data.value_counts(sort=False).reset_index().values
+    p, q = x[:, 0], x[:, 1]
+    return (p * (q / q.sum())).sum()
 
 for file in os.listdir(dir_):
 
@@ -17,15 +22,17 @@ for file in os.listdir(dir_):
 		df.set_index('Datetime', inplace=True)
 		df['Price'] = (df['Bid'] + df['Ask'])/2
 
-		df = df.resample('%dW' % min_).agg({
+		df = df.resample('%dT' % min_).agg({
 		    'Price' : [('Open', 'first'),  
 		               ('High', 'max'),
 		               ('Low', 'min'),
 		               ('Close', 'last'), 
-		               ('Volume', 'sum')]
+		               ('Volume', 'sum'),
+		               ('Ticks', 'count'), 
+		               ('VWAP', vwap)]
 		})
-		df.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
-		print(df)
+		df.columns = ['Open', 'High', 'Low', 'Close', 'Volume', 'Ticks', 'VWAP']
+		print(df.head())
 		
 		for col in df.columns:
 			t = df[col]
@@ -40,4 +47,4 @@ for file in os.listdir(dir_):
 	
 main = pd.concat(main, axis=0)
 
-main.to_csv('D:\\TickData_Agg\\'+ticker+'_week.csv')
+main.to_csv('D:\\TickData_Agg\\'+ticker+'_new.csv')

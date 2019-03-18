@@ -11,7 +11,6 @@ def time_it(start, label):
 	print('%s %.3f Minutes' % (label, (time.time() - start)/60))
 	return time.time()
 
-
 if __name__ == '__main__':
 
 	argparser = ArgumentParser()

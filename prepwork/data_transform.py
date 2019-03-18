@@ -9,6 +9,7 @@ from consts import dir_
 
 n_periods = 60
 n_candles = 480
+window = 20
 
 def filter_weekends(df):
     df['Datetime'] = pd.to_datetime(df.Datetime)
@@ -46,35 +47,22 @@ def features(file, ticker):
 	df = pd.read_csv(file)
 	df = filter_weekends(df)
 
-	### Moving Averages
-	df['10MA'] = df.Close.rolling(window=10, min_periods=1).mean()
-	df['Dist10MA'] = df.Close / df['10MA']
-	df['20MA'] = df.Close.rolling(window=20, min_periods=1).mean()
-	df['Dist20MA'] = df.Close / df['20MA']
-	df['50MA'] = df.Close.rolling(window=50, min_periods=1).mean()
-	df['Dist50MA'] = df.Close / df['50MA']
-	df['200MA'] = df.Close.rolling(window=200, min_periods=1).mean()
-	df['Dist200MA'] = df.Close / df['200MA']
-
-	### Cristobands
-	df['10High'] = df.High.rolling(window=10, min_periods=1).mean()
-	df['8Low'] = df.Low.rolling(window=10, min_periods=1).mean()
-	df['CBSpread'] = df['10High'] - df['8Low']
-	df.drop(['10High', '8Low'], axis=1, inplace=True)
+	df['Change'] = (df.Close - df.Open) / df.Open
+	## Distribution Statistics
+	df['STD'] = df.Change.rolling(window=window, min_periods=1).std()
+	df['Vol'] = df.STD/np.sqrt(window)
+	df['Skew'] = df.Change.rolling(window=window, min_periods=1).skew()
+	# Excess Kurtosis
+	df['Kurtosis'] = df.Change.rolling(window=window, min_periods=1).kurt()-3
+	df['Ticks'] = np.log(df.Ticks)
 
 	### Center Metrics Around 1
 	for col in df.columns:
-	    if col in ['Open', 'High', 'Low', 'Close', 'CBSpread']:
+	    if col in ['Open', 'High', 'Low', 'Close']:
 	        df[col] = df[col].pct_change() + 1
 
-	## Bollinger Bands
-	df['20BB'] = df.Close.rolling(window=20, min_periods=1).mean()
-	df['20BBSTD'] = df['20BB'].rolling(window=20, min_periods=1).std()
-	df['BB'] = (df['20BB'] + 1.5 * df['20BBSTD']) - (df['20BB'] - 1.5 * df['20BBSTD'])
-	df['BB'] = (df['BB']+1).pct_change()+1
-
 	## Discard Temp Features
-	df.drop(['20BBSTD', '20BB', '10MA', '20MA', '50MA', '200MA'], axis=1, inplace=True)
+	df.drop(['STD'], axis=1, inplace=True)
 
 	## Relative Volume
 	df = compute_relative_volume(df, n_periods, n_candles)
