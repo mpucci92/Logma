@@ -9,8 +9,8 @@ from joblib import delayed	, Parallel
 input_dir_ = 'D:/TickData_UZ'
 output_dir_ = 'D:/TickData_Agg'
 
-n_jobs = 4
-min_ = 3
+n_jobs = 6
+min_ = 5
 
 ################################################
 
@@ -20,6 +20,8 @@ def vwap(data):
     return (p * (q / q.sum())).sum()
 
 def resample_ticker(ticker):
+
+	main = []
 
 	for file in os.listdir(input_dir_):
 
@@ -39,18 +41,10 @@ def resample_ticker(ticker):
 			               ('Volume', 'sum'),
 			               ('Ticks', 'count'), 
 			               ('VWAP', vwap)]
-			})
+			}).bfill()
 			df.columns = ['Open', 'High', 'Low', 'Close', 'Volume', 'Ticks', 'VWAP']
+
 			print(df.head())
-			
-			for col in df.columns:
-				t = df[col]
-				if col != 'Volume':
-				    t = t.fillna(method='backfill')
-				    df[col] = t.values
-				else:
-				    t = t.fillna(value=0)
-				    df[col] = t.values
 
 			main.append(df)
 		

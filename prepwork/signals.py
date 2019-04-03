@@ -11,9 +11,9 @@ from consts import dir_
 
 ################################################
 
-window = 20
+window = 50
 cutoff = 100
-n_jobs = 4
+n_jobs = 6
 input_dir_ = 'D:/TickData_UZ'
 
 ################################################
@@ -88,6 +88,7 @@ def get_signals(ticker):
 	cutoff = 3
 	longs = df[df.Change > cutoff*df.STD + df.Mean]
 	longs = longs[longs.STD != 0]
+
 	shorts = df[df.Change < df.Mean - cutoff*df.STD]
 	shorts = shorts[shorts.STD != 0]
 
@@ -124,7 +125,7 @@ def get_signals(ticker):
 
 	trades = pd.concat([ttc_longs, ttc_shorts], axis=0).sort_values('Datetime')
 
-	trades.to_csv('{}/{}_trades.csv'.format(dir_, ticker), index=False)
+	trades.to_csv('{}/Trades50/{}_trades.csv'.format(dir_, ticker), index=False)
 
 def get_tickers():
 
