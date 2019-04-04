@@ -124,6 +124,9 @@ def get_signals(ticker):
 	print(ttc_shorts.describe())
 
 	trades = pd.concat([ttc_longs, ttc_shorts], axis=0).sort_values('Datetime')
+	raw = pd.read_csv('D:/TickData_Agg/{}.csv'.format(ticker))
+	tmp = trades.merge(raw, how='outer', on='Datetime').dropna()
+	trades = trades[tmp.Volume != 0]
 
 	trades.to_csv('{}/Trades50/{}_trades.csv'.format(dir_, ticker), index=False)
 

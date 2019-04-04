@@ -146,6 +146,9 @@ def get_signals(ticker):
 		main.append(trades)
 
 	main = aggregate_windows(main)
+	raw = pd.read_csv('D:/TickData_Agg/{}.csv'.format(ticker))
+	tmp = main.merge(raw, how='outer', on='Datetime').dropna()
+	main = main[tmp.Volume != 0]
 
 	main.to_csv('{}/AddTrades/{}_trades.csv'.format(dir_, ticker), index=False)
 

@@ -1,3 +1,6 @@
 tmp/
 truefx/
 .ipynb_checkpoints
+__pycache__
+plots/
+all_plots/
