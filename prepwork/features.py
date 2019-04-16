@@ -28,66 +28,83 @@ n_jobs = 6
 ###################################
 
 def filter_weekends(df):
-    df['Datetime'] = pd.to_datetime(df.Datetime)
-    df = df[~df.Datetime.dt.weekday_name.isin(['Saturday', 'Sunday'])]
-    return df
+	df['Datetime'] = pd.to_datetime(df.Datetime)
+	df = df[~df.Datetime.dt.weekday_name.isin(['Saturday', 'Sunday'])]
+	return df
 
 def compute_relative_volume(df, n_periods, n_candles):
 	
-    #Align the dataset to start at a day
-    idx = df.Datetime.astype(str).str.split(' ', expand=True)[1].values.tolist().index('00:00:00')
-    df = df.iloc[idx:, :]
-    
-    cut_off = [i for i in range(0, len(df), n_candles)][-1]
-    df = df.iloc[:cut_off, :]
-    cumvol = np.array(np.split(df.Volume.values, int(len(df)/n_candles)))
-    
-    cumvol = np.cumsum(cumvol, axis=1)
-    cumvol = cumvol.reshape(-1, )
-    
-    offset = n_periods * n_candles
-    cumvol_final = [0 for i in range(offset)]
-    
-    for i in range(offset, len(df), n_candles):
-        
-        voldist = cumvol[i-offset:i]
-        idc = np.arange(0, offset, n_candles)
-        voldist = [voldist[idc+i].mean() for i in range(0, n_candles)]
-        cumvol_final += voldist
-    
-    df['RelVol'] = np.divide(cumvol, cumvol_final)
-    return df.iloc[offset:, :]
+	#Align the dataset to start at a day
+	idx = df.Datetime.astype(str).str.split(' ', expand=True)[1].values.tolist().index('00:00:00')
+	df = df.iloc[idx:, :]
+	
+	cut_off = [i for i in range(0, len(df), n_candles)][-1]
+	df = df.iloc[:cut_off, :]
+	cumvol = np.array(np.split(df.Volume.values, int(len(df)/n_candles)))
+	
+	cumvol = np.cumsum(cumvol, axis=1)
+	cumvol = cumvol.reshape(-1, )
+	
+	offset = n_periods * n_candles
+	cumvol_final = [0 for i in range(offset)]
+	
+	for i in range(offset, len(df), n_candles):
+		
+		voldist = cumvol[i-offset:i]
+		idc = np.arange(0, offset, n_candles)
+		voldist = [voldist[idc+i].mean() for i in range(0, n_candles)]
+		cumvol_final += voldist
+	
+	df['RelVol'] = np.divide(cumvol, cumvol_final)
+	return df.iloc[offset:, :]
 
 def approx_entropy(x):
-    
-    try:
-        return app_entropy(x, order=2, metric='chebyshev')
-    except:
-        return np.nan
-    
+	
+	try:
+		return app_entropy(x, order=2, metric='chebyshev')
+	except:
+		return np.nan
+	
 def spec_entropy(x):
 
-    try:
-        offset = x.shape[0]
-        return spectral_entropy(x, sf=offset, method='welch', nperseg=(offset/8), normalize=True)
-    except:
-        return np.nan
-    
+	try:
+		offset = x.shape[0]
+		return spectral_entropy(x, sf=offset, method='welch', nperseg=(offset/8), normalize=True)
+	except:
+		return np.nan
+	
 def autocorrelation(x):
-    
-    try:
-        return x.autocorr(11)
-    except:
-        return np.nan
-    
+	
+	try:
+		return x.autocorr(11)
+	except:
+		return np.nan
+	
 def stationarity(x):
-    
-    try:
-        t, _, _, _, t_crit = adfuller(x, autolag = 'AIC')
-        t_crit = list(t_crit.values())[1]
-        return 0 if (t < t_crit or np.isnan(t)) else 1
-    except:
-        return np.nan
+	
+	try:
+		t, _, _, _, t_crit, _ = adfuller(x, autolag = 'AIC')
+		t_crit = list(t_crit.values())[1]
+		return 0 if (t < t_crit or np.isnan(t)) else 1
+	except Exception as e:
+		return np.nan
+
+def market_sessions(df):
+	
+	us = [[i, 1 - (i - 12) / 9] for i in range(12, 20)]
+	eur = [[i, 1 - (i - 7) / 9] for i in range(7, 16)]
+	asia = [[i, 1-(i+1) / 9] for i in range(0, 9)]
+	asia = [[23, 1]] + asia
+	
+	#Market Hours
+	df['Hour'] = pd.to_datetime(df.Datetime).dt.hour.astype(int)
+	
+	#Merge
+	df = df.merge(pd.DataFrame(asia, columns=['Hour', 'Asia']), how='outer', on='Hour')
+	df = df.merge(pd.DataFrame(us, columns=['Hour', 'Amer']), how='outer', on='Hour')
+	df = df.merge(pd.DataFrame(eur, columns=['Hour', 'Eur']), how='outer', on='Hour')
+	
+	return df.drop('Hour', axis=1).fillna(0).sort_values('Datetime').reset_index(drop=True)
 
 def features(ticker):
 
@@ -127,11 +144,14 @@ def features(ticker):
 
 	### Center Metrics Around 1
 	for col in df.columns:
-	    if col in ['Open', 'High', 'Low', 'Close']:
-	        df[col] = df[col].pct_change() + 1
+		if col in ['Open', 'High', 'Low', 'Close']:
+			df[col] = df[col].pct_change() + 1
 
 	def cp(x):
 		return x.cumprod()[-1]
+
+	# Market Sessions
+	df = market_sessions(df)
 
 	df['LongSkew'] = df.LongSkew.fillna(value=0)
 	df['ShortSkew'] = df.ShortSkew.fillna(value=0)
@@ -154,7 +174,7 @@ def features(ticker):
 	# Autocorrelation
 	df['LongAutocorrelation'] = df.Change.rolling(window=long_window, min_periods=1).apply(autocorrelation, raw=False)
 	df['ShortAutocorrelation'] = df.Change.rolling(window=short_window, min_periods=1).apply(autocorrelation, raw=False)
-
+	
 	# Stationarity
 	df['LongStationarity'] = df.Change.rolling(window=long_window, min_periods=1).apply(stationarity, raw=True)
 	df['ShortStationarity'] = df.Change.rolling(window=short_window, min_periods=1).apply(stationarity, raw=True)

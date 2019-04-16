@@ -41,7 +41,7 @@ def scale_it(ticker):
 	print(ticker)
 
 	features = pd.read_csv('{}/Features/{}_clean.csv'.format(dir_, ticker))
-	trades =  pd.read_csv('{}/Trades/{}_trades.csv'.format(dir_, ticker))
+	trades =  pd.read_csv('{}/AddTrades/{}_trades.csv'.format(dir_, ticker))
 
 	features.LongKurtosis = log_trimming(features.LongKurtosis.values.copy(), 10, -10)
 	features.ShortKurtosis = log_trimming(features.ShortKurtosis.values.copy(), 10, -10)
@@ -63,7 +63,7 @@ def scale_it(ticker):
 
 	### SCALING
 	drop = ['ShortSpectralEntropy']
-	no_scale = ['LongStationarity', 'ShortStationarity']
+	no_scale = ['LongStationarity', 'ShortStationarity', 'Asia', 'Amer', 'Eur']
 
 	ss = StandardScaler()
 
@@ -83,22 +83,17 @@ def scale_it(ticker):
 	trades = trades.merge(features, on='Datetime', how='outer').dropna().drop('ShortSpectralEntropy', axis=1)
 
 	print()
-
 	print(trades[['LongKurtosis', 'ShortKurtosis', 'LongProg', 'ShortProg', 'DShortEMA']].describe())
-
 	print()
 
-	trades.to_csv('{}/Scaled/{}_scaled.csv'.format(dir_, ticker))
+	trades.to_csv('{}/Scaled/{}_scaled.csv'.format(dir_, ticker), index=False)
 
 def get_tickers():
 
 	tickers = []
-
 	for file in os.listdir(input_dir_):
-
 		ticker = file.split('-')[0]
 		tickers.append(ticker) if ticker not in tickers else None
-	print(tickers)
 	return tickers
 
 def go_parallel():
@@ -108,11 +103,8 @@ def go_parallel():
 def main(ticker):
 
 	if ticker == 'ALL':
-
 		go_parallel()
-
 	else:
-
 		scale_it(ticker)
 
 if __name__ == '__main__':

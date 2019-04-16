@@ -124,9 +124,10 @@ def get_signals(ticker):
 	print(ttc_shorts.describe())
 
 	trades = pd.concat([ttc_longs, ttc_shorts], axis=0).sort_values('Datetime')
+	cols = trades.columns
 	raw = pd.read_csv('D:/TickData_Agg/{}.csv'.format(ticker))
-	tmp = trades.merge(raw, how='outer', on='Datetime').dropna()
-	trades = trades[tmp.Volume != 0]
+	trades = trades.merge(raw, how='outer', on='Datetime').dropna()
+	trades = trades[trades.Volume != 0][cols]
 
 	trades.to_csv('{}/Trades50/{}_trades.csv'.format(dir_, ticker), index=False)
 
@@ -148,11 +149,8 @@ def go_parallel():
 def main(ticker):
 
 	if ticker == 'ALL':
-
 		go_parallel()
-
 	else:
-
 		get_signals(ticker)
 
 if __name__ == '__main__':
