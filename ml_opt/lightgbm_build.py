@@ -69,7 +69,7 @@ def go_parallel():
 
 	train_pct = 0.5
 	test_pct = 1 - train_pct
-	validation_pct = 0.1
+	validation_pct = 0.2
 
 	idc = np.random.permutation(main.shape[0])
 	train_len = int(train_pct * main.shape[0])
