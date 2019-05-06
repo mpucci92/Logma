@@ -136,11 +136,11 @@ def features(ticker):
 	df['ShortKurtosis'] = df.Change.rolling(window=short_window, min_periods=1).apply(kurtosis, raw=True)
 
 	#Positioning Indicators
-	df['LongEMA'] = df.Close.ewm(span=long_window, min_periods=1).mean()
-	df['ShortEMA'] = df.Close.ewm(span=short_window, min_periods=1).mean()
+	df['LongSMA'] = df.Close.rolling(window=long_window, min_periods=1).mean()
+	df['ShortSMA'] = df.Close.rolling(window=short_window, min_periods=1).mean()
 
-	df['DLongEMA'] = df.Close / df['LongEMA'].values
-	df['DShortEMA'] = df.Close / df['ShortEMA'].values
+	df['DLongSMA'] = df.Close / df['LongEMA'].values
+	df['DShortSMA'] = df.Close / df['ShortEMA'].values
 
 	### Center Metrics Around 1
 	for col in df.columns:
@@ -149,9 +149,6 @@ def features(ticker):
 
 	def cp(x):
 		return x.cumprod()[-1]
-
-	# Market Sessions
-	df = market_sessions(df)
 
 	df['LongSkew'] = df.LongSkew.fillna(value=0)
 	df['ShortSkew'] = df.ShortSkew.fillna(value=0)
@@ -185,8 +182,11 @@ def features(ticker):
 	df.LongAutocorrelation.fillna(0, inplace=True)
 	df.ShortAutocorrelation.fillna(0, inplace=True)
 
+	# Market Sessions
+	df = market_sessions(df)
+
 	# Discard Temp Features
-	df.drop(['Volume','VWAP', 'Ticks', 'LongEMA', 'ShortEMA', 'Open', 'High', 'Low', 'Close', 'STDLong', 'STDShort'], axis=1, inplace=True)
+	df.drop(['Volume','VWAP', 'Ticks', 'LongSMA', 'ShortSMA', 'Open', 'High', 'Low', 'Close', 'STDLong', 'STDShort'], axis=1, inplace=True)
 
 	df = df.iloc[long_window:, :]
 
