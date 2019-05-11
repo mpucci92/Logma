@@ -4,7 +4,7 @@ from threading import Thread
 import queue
 
 from zwrapper import zWrapper
-from zclient import zClient
+from scanner_client import ScannerClient
 from zmodel import Model
 
 from zcontracts import forex_contract
@@ -21,12 +21,12 @@ clientId = 0
 
 ##############################
 
-class zApp(zClient, zWrapper):
+class Scanner(ScannerClient, zWrapper):
 
 	def __init__(self, ip_address, port, clientId):
 
 		zWrapper.__init__(self)
-		zClient.__init__(self, self)
+		ScannerClient.__init__(self, self)
 
 		self.connect(ip_address, port, clientId)
 
@@ -37,11 +37,10 @@ class zApp(zClient, zWrapper):
 		self.print_errors()
 
 		self.bg_scheduler = BackgroundScheduler()
-		self.model = Model('EURUSD', 5, 20, 50, 7)
+		self.model = Model('EURUSD', candle_size = 5, short_period = 20, long_period = 50, log_trim = 7)
 
 	def on_period(self):
 		
-		print(datetime.now())
 		dt = datetime.now() - timedelta(minutes=1)
 		dt = dt.strftime('%Y%m%d  %H:%M:00')
 
@@ -56,10 +55,9 @@ class zApp(zClient, zWrapper):
 				break
 
 		signal, features = self.model.is_trade(bar)
-		print('\nSignal', signal, '\nFeatures', features)
-
-		if signal:
-			print('Trade', datetime.now())
+		
+		print('\n%s' % datetime.now(), '\nSignal', signal, '\nFeatures', features)
+		print(bar)
 
 	def on_start(self, reqId):
 
@@ -80,4 +78,4 @@ class zApp(zClient, zWrapper):
 
 if __name__ == '__main__':
 
-	app = zApp(ip_address, port, clientId)
+	scanner = Scanner(ip_address, port, clientId)

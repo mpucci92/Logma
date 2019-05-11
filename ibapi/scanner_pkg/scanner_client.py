@@ -7,12 +7,11 @@ import time
 import pandas as pd
 import queue
 
-class zClient(EClient):
+class ScannerClient(EClient):
 
 	def __init__(self, wrapper):
 
 		EClient.__init__(self, wrapper = wrapper)
-		self.iters = 0
 
 	def init_historical_data(self, reqId):
 
@@ -28,7 +27,6 @@ class zClient(EClient):
 		dt = datetime.now()
 		while dt.second != 0:
 			dt = datetime.now()
-		print('Starting at', dt)
 
 		self.reqHistoricalData(reqId, contract, '', durationStr,
 							   barSizeSetting, whatToShow, useRTH, 
@@ -48,9 +46,7 @@ class zClient(EClient):
 		if len(data) < 50:
 			print('Error ... initialization not completed')
 			self.cancelHistoricalData(reqId)
+			time.sleep(1)
 			return self.init_historical_data(reqId)
-
-		gmt_time = datetime.utcnow().strftime('%Y%m%d %H:%M:%S GMT')
-		print('Done at', gmt_time)
 
 		return data

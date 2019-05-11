@@ -40,7 +40,3 @@ class zWrapper(EWrapper):
 
 	def historicalDataUpdate(self, reqId, bar):
 		self._updates_queue.put((bar.date, bar.open, bar.high, bar.low, bar.close))
-
-	def historicalDataEnd(self, reqId, start, end):
-		print('Start', start, 'End', end)
-
