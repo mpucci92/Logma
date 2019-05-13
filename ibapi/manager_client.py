@@ -2,88 +2,72 @@ from ibapi.client import EClient
 from ibapi.order import Order
 
 from zcontracts import forex_contract
-from zorders import market_order
+from zorders import limit_order
+from trade import Trade
 
 import queue
 
 import time
-
-class Trade(Object):
-
-	def __init__(self, contract, direction, order):
-
-		self.on_signal(contract, direction, order)
-
-		self.execution_time = None
-		self.take_profit = None
-		self.soft_stop = None
-		self.hard_stop = None
-
-	def on_signal(self, contract, direction, order):
-
-		self.init_time = datetime.now()
-		self.contract = contract
-		self.symbol = contract.symbol + contract.currency
-		self.direction = direction
-		self.init_order = order
-		self.isActive = False
-
-	def on_update(self):
-
-		## Check if need to execute any of the orders
 
 class ManagerClient(EClient):
 
 	def __init__(self, wrapper):
 
 		EClient.__init__(self, wrapper = wrapper)
-		self.position_dict = {}
 
-	def at_price(self, direction, price, action, quantity, t1, t2):
+	def at_price(self, price, action, quantity, t1, t2):
 
-		direction_int = 1 if direction == "BUY" else -1
+		## Trade Direction
+		direction = self.action_directions[action]
 
-		## Symbol
-		symbol = t1+t2
+		## Ticker Symbol
+		symbol = t1 + t2
 
-		## Contract
+		## IB Contract
 		contract = forex_contract(t1, t2)
 
 		## Initial Order
-		init_order = limit_order(direction, quantity, price)
+		init_order = limit_order(action, quantity, price)
 
-		## Take Profit Order
-		tp_delta = 0.02
+		## Closing action
+		closing_action = self.closing_actions[action]
 
-		take_profit_order = limit_order()
+		## Tick increment
+		tick_increment = self.tick_increments[symbol]
 
-	def at_market(self, action, position, t1, t2):
+		## Take profit order
+		tp_target = price + tick_increment * 5
+		tp_order = limit_order(closing_action, quantity, tp_target)
 
-		## Symbol
-		symbol = t1+t2
+		## Soft stop order
+		ss_target = price - tick_increment * 5
+		ss_order = limit_order(closing_action, quantity, ss_target)
 
-		## Contract
-		contract = forex_contract(t1, t2)
+		## Hard stop order
+		hs_target = price - tick_increment * 15
+		hs_order = limit_order(closing_action, quantity, hs_target)
 
-		## Order
-		order = market_order(action, position)
+		## Build Trade Object
+		trade = Trade(contract = contract, direction = direction, order = init_order, 
+					  orderId = self.order_id, tp_order =  tp_order, ss_order = ss_order, 
+					  hs_order = hs_order)
+		print('Creating Trade object', trade.symbol, direction)
 
-		## Execution
-		self.placeOrder(self.order_id, contract, order)
+		## Add trade to position index
+		self.trades[symbol] = trade
 
-		## Request new orderID
+		## Add trade to reverse index
+		self.order_ids[self.order_id] = trade
+
+		## Execute the order
+		self.placeOrder(self.order_id, contract, init_order)
+
+		## Increment the next orderID
 		self.reqIds(-1)
 
-		## Start Market Data
-		self.reqMktData(tickerId = self.ticker_info[symbol], contract = contract,
-						'Mark Price', snapshot = False, regulatorySnapshot = False, [])
+		## Request Live Quotes
+		self.reqMarketDataType(1)
 
-		## Init Trade Object
-		new_trade = Trade(contract, 1 if action == "BUY" else -1, order)
-
-		## Add to trade dict
-		self.trades[symbol] = new_trade
-
-		## Add symbol to trade orderId mapping
-		self.order_ids[order.order_id] = self.trades[symbol]
+		## Start market data for instrument
+		self.reqMktData(self.ticker_ids[symbol], contract, '', False, False, [])
 

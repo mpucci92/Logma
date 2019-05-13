@@ -15,7 +15,7 @@ class ScannerClient(EClient):
 
 	def init_historical_data(self, reqId):
 
-		contract = forex_contract("EUR", "USD")
+		contract = forex_contract("USD", "JPY")
 		gmt_time = datetime.utcnow().strftime('%Y%m%d %H:%M:%S GMT')
 		durationStr = "3000 S"
 		barSizeSetting = "1 min"

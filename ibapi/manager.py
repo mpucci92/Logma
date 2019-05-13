@@ -10,27 +10,9 @@ from zcontracts import forex_contract
 
 ##############################
 
-ip_address = '127.0.0.1'
+ip_address = '192.168.2.26'
 port = 4001
 clientId = 1
-
-## TickerDict
-
-ticker_info = {
-	"EURUSD" : 0,
-	"EURCHF" : 1,
-	"EURJPY" : 2
-}
-
-order_ints = {
-	"BUY" : 1,
-	"SELL" : -1
-}
-
-order_invs = {
-	"BUY" : "SELL",
-	"SELL" : "BUY"
-}
 
 ##############################
 
@@ -44,26 +26,32 @@ class Manager(ManagerClient, mWrapper):
 		## OrderID
 		self.order_id = None
 
-		## Positions Dictionary
+		## Symbol to Trade object mapping
 		self.trades = {}
 
-		## Reverse Trades Mapping
+		## Reverse OrderID-Trade Mapping
 		self.order_ids = {}
 
-		## Order integers
-		self.order_ints = order_ints = {
+		## Direction integer mappings
+		self.action_directions = {
 			"BUY" : 1,
 			"SELL" : -1
 		}
 
+		## Direction tick types
+		self.tick_types = {
+			1 : 1,
+			-1 : 2
+		}
+
 		## Inverse Orders
-		self.order_invs = order_invs = {
+		self.closing_actions = {
 			"BUY" : "SELL",
 			"SELL" : "BUY"
 		}
 
 		## Ticker-reqID mapping
-		self.ticker_info = ticker_info = {
+		self.ticker_ids = {
 			"EURCHF" : 0,
 			"USDCHF" : 1,
 			"GBPUSD" : 2,
@@ -81,7 +69,25 @@ class Manager(ManagerClient, mWrapper):
 		}
 
 		## Reverse mapping
-		self.reqId_info = {ticker_info[key] : key for key in ticker_info.keys()}
+		self.id_tickers = {self.ticker_ids[key] : key for key in self.ticker_ids.keys()}
+
+		## Tick Increments
+		self.tick_increments = {
+			"EURCHF" : 0.00005,
+			"USDCHF" : 0.00005,
+			"GBPUSD" : 0.00005,
+			"USDJPY" : 0.005,
+			"EURUSD" : 0.00005,
+			"EURGBP" : 0.00005,
+			"NZDUSD" : 0.00005,
+			"USDCAD" : 0.00005,
+			"EURJPY" : 0.005,
+			"AUDUSD" : 0.00005,
+			"GBPJPY" : 0.005,
+			"CHFJPY" : 0.005,
+			"AUDNZD" : 0.00005,
+			"CADJPY" : 0.005
+		}
 
 		## Errors
 		self.init_errors() 
@@ -100,6 +106,9 @@ class Manager(ManagerClient, mWrapper):
 		self.wrapper.print_errors()
 
 	def on_close(self):
+
+		## Close all orders
+		self.reqGlobalCancel()
 
 		self.disconnect()
 		self.bg_scheduler.shutdown()

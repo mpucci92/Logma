@@ -36,28 +36,35 @@ class mWrapper(EWrapper):
 	def orderStatus(self, orderId, status, filled, remaining, avgFilledPrice, 
 					permId, parentId, lastFillPrice, clientId, whyHeld, mktCapPrice):
 
+		trade = self.order_ids[orderId]
+
+		print('\n\nOrder Status {} for ticker {}'.format(status, trade.symbol))
+
+		## Store the position filled
+		trade.num_filled = filled
+
+		## Store the remaining to be filled
+		trade.num_remaining = remaining
+
+		## Store the average cost of the position
+		trade.avg_fill_price = avgFilledPrice
+
 		if status == 'Filled':
-			## Get trade object
-			trade = self.order_ids[orderId]
-			
-			## Set active flag
+
+			print('\n\nTrade {} was filled for ticker {} at avg price {}'.format(orderId, trade.symbol, avgFilledPrice))
+
 			trade.is_active = True
 
-			## Store the position filled
-			trade.num_filled = filled
-
-			## Take profit
-			
-
-
-
-
-
-
 	def position(self, account, contract, pos, avgCost):
-		pass
+		
+		print('\n\nPosition Change for {}, total {} quantity at {} cost'.format(contract.symbol+contract.curreny, pos, avgCost))
 
 	def tickPrice(self, tickerId, field, price, attribs):
-		pass
 
+		trade = self.trades[self.id_tickers[tickerId]]
+		if field == self.tick_types[trade.direction]:
+			trade.latest_update = price
 
+	def marketDataType(self, reqId, marketDataType):
+
+		print('\n\nReqId', reqId, 'Data Type', marketDataType)
