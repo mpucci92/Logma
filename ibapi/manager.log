@@ -1,0 +1,428 @@
+WARNING:root:Started: 2019-05-15 21:36:37
+WARNING:root:Next order ID 94
+WARNING:root:
+Take Profit Target: 1.1208
+WARNING:root:Soft Stop Target: 1.1206999999999998
+WARNING:root:Hard Stop Target: 1.12065
+WARNING:root:
+Creating Trade Object. Symbol EURUSD Direction 1
+WARNING:root:
+Adding ID to reverse index 94
+WARNING:root:Next order ID 95
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Order Status PreSubmitted for ticker EURUSD - 94. Purpose: 
+WARNING:root:Order status update for an initiator
+WARNING:root:
+Order Status Filled for ticker EURUSD - 94. Purpose: 
+WARNING:root:Order status update for an initiator
+WARNING:root:
+Trade 94 was filled for ticker EURUSD at avg price 1.12073
+WARNING:root:
+Order Status Filled for ticker EURUSD - 94. Purpose: 
+WARNING:root:Order status update for an initiator
+WARNING:root:
+Trade 94 was filled for ticker EURUSD at avg price 1.12073
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:
+Take Profit Target: 1.2847000000000002
+WARNING:root:Soft Stop Target: 1.2846
+WARNING:root:Hard Stop Target: 1.28455
+WARNING:root:
+Creating Trade Object. Symbol GBPUSD Direction 1
+WARNING:root:
+Adding ID to reverse index 95
+WARNING:root:Next order ID 96
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Order Status PreSubmitted for ticker GBPUSD - 95. Purpose: 
+WARNING:root:Order status update for an initiator
+WARNING:root:
+Order Status Filled for ticker GBPUSD - 95. Purpose: 
+WARNING:root:Order status update for an initiator
+WARNING:root:
+Trade 95 was filled for ticker GBPUSD at avg price 1.28463
+WARNING:root:
+Order Status Filled for ticker GBPUSD - 95. Purpose: 
+WARNING:root:Order status update for an initiator
+WARNING:root:
+Trade 95 was filled for ticker GBPUSD at avg price 1.28463
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12071
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.999999999992347e-05
+WARNING:root:Soft Stop -1.0000000000287557e-05
+WARNING:root:Hard Stop -6.000000000017103e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12073
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -7.00000000000145e-05
+WARNING:root:Soft Stop -3.0000000000196536e-05
+WARNING:root:Hard Stop -8.000000000008001e-05
+WARNING:root:EURUSD -- Price : 1.12072
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12074
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.999999999994898e-05
+WARNING:root:Soft Stop -4.000000000026205e-05
+WARNING:root:Hard Stop -9.000000000014552e-05
+WARNING:root:EURUSD -- Price : 1.12076
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -4.0000000000040004e-05
+WARNING:root:Soft Stop -6.000000000017103e-05
+WARNING:root:Hard Stop -0.0001100000000000545
+WARNING:root:EURUSD -- Price : 1.12075
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12076
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -4.0000000000040004e-05
+WARNING:root:Soft Stop -6.000000000017103e-05
+WARNING:root:Hard Stop -0.0001100000000000545
+WARNING:root:EURUSD -- Price : 1.12079
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -1.0000000000065512e-05
+WARNING:root:Soft Stop -9.000000000014552e-05
+WARNING:root:Hard Stop -0.000140000000000029
+WARNING:root:GBPUSD -- Price : 1.28465
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28469
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -1.0000000000065512e-05
+WARNING:root:Soft Stop -9.000000000014552e-05
+WARNING:root:Hard Stop -0.000140000000000029
+WARNING:root:GBPUSD -- Price : 1.28468
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -2.0000000000131024e-05
+WARNING:root:Soft Stop -8.000000000008001e-05
+WARNING:root:Hard Stop -0.00012999999999996348
+WARNING:root:EURUSD -- Price : 1.12078
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -1.999999999990898e-05
+WARNING:root:Soft Stop -8.000000000030205e-05
+WARNING:root:Hard Stop -0.00013000000000018552
+WARNING:root:GBPUSD -- Price : 1.28465
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:EURUSD -- Price : 1.12075
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28464
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -6.000000000017103e-05
+WARNING:root:Soft Stop -4.0000000000040004e-05
+WARNING:root:Hard Stop -8.999999999992347e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:EURUSD -- Price : 1.12078
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -1.999999999990898e-05
+WARNING:root:Soft Stop -8.000000000030205e-05
+WARNING:root:Hard Stop -0.00013000000000018552
+WARNING:root:EURUSD -- Price : 1.1208
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit 0.0
+WARNING:root:Soft Stop -0.00010000000000021103
+WARNING:root:Hard Stop -0.0001500000000000945
+WARNING:root:GBPUSD -- Price : 1.28466
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -4.000000000026205e-05
+WARNING:root:Soft Stop -5.999999999994898e-05
+WARNING:root:Hard Stop -0.00010999999999983245
+WARNING:root:GBPUSD -- Price : 1.28465
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28464
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -6.000000000017103e-05
+WARNING:root:Soft Stop -4.0000000000040004e-05
+WARNING:root:Hard Stop -8.999999999992347e-05
+WARNING:root:EURUSD -- Price : 1.12081
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit 1.0000000000065512e-05
+WARNING:root:Taking Profit
+WARNING:root:Next order ID 97
+WARNING:root:
+Order Status PreSubmitted for ticker EURUSD - 96. Purpose: 
+WARNING:root:EURUSD -- Price : 1.1208
+WARNING:root:
+Order Status Filled for ticker EURUSD - 96. Purpose: 
+WARNING:root:
+Closing Trade 96 was filled for ticker EURUSD at avg price 1.12081
+WARNING:root:Num Filled on Initiate 20000.0 same as Num Filled on Close 20000.0
+WARNING:root:GBPUSD -- Price : 1.28465
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28464
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -6.000000000017103e-05
+WARNING:root:Soft Stop -4.0000000000040004e-05
+WARNING:root:Hard Stop -8.999999999992347e-05
+WARNING:root:GBPUSD -- Price : 1.28465
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28467
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -3.0000000000196536e-05
+WARNING:root:Soft Stop -7.00000000000145e-05
+WARNING:root:Hard Stop -0.00011999999999989797
+WARNING:root:GBPUSD -- Price : 1.28468
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -2.0000000000131024e-05
+WARNING:root:Soft Stop -8.000000000008001e-05
+WARNING:root:Hard Stop -0.00012999999999996348
+WARNING:root:GBPUSD -- Price : 1.28467
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -3.0000000000196536e-05
+WARNING:root:Soft Stop -7.00000000000145e-05
+WARNING:root:Hard Stop -0.00011999999999989797
+WARNING:root:GBPUSD -- Price : 1.28466
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -4.000000000026205e-05
+WARNING:root:Soft Stop -5.999999999994898e-05
+WARNING:root:Hard Stop -0.00010999999999983245
+WARNING:root:GBPUSD -- Price : 1.28465
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -5.0000000000105516e-05
+WARNING:root:Soft Stop -5.0000000000105516e-05
+WARNING:root:Hard Stop -9.999999999998899e-05
+WARNING:root:GBPUSD -- Price : 1.28466
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -4.000000000026205e-05
+WARNING:root:Soft Stop -5.999999999994898e-05
+WARNING:root:Hard Stop -0.00010999999999983245
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.28462
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -8.000000000008001e-05
+WARNING:root:Soft Stop -2.0000000000131024e-05
+WARNING:root:Hard Stop -7.00000000000145e-05
+WARNING:root:GBPUSD -- Price : 1.28461
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -9.000000000014552e-05
+WARNING:root:Soft Stop -1.0000000000065512e-05
+WARNING:root:Hard Stop -5.999999999994898e-05
+WARNING:root:GBPUSD -- Price : 1.2846
+WARNING:root:
+Trade is active
+WARNING:root:Take Profit -0.00010000000000021103
+WARNING:root:Soft Stop 0.0
+WARNING:root:Hard Stop -4.999999999988347e-05

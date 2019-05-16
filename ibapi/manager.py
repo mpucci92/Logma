@@ -8,6 +8,8 @@ from datetime import datetime
 
 from zcontracts import forex_contract
 
+import logging
+
 ##############################
 
 ip_address = '192.168.2.26'
@@ -23,11 +25,19 @@ class Manager(ManagerClient, mWrapper):
 		mWrapper.__init__(self)
 		ManagerClient.__init__(self, self)
 
+		## Logging
+		self.logger = logging
+		self.logger.basicConfig(filename='manager.log', filemode='w')
+		self.logger.warning('Started: %s' % self.now())
+
 		## OrderID
 		self.order_id = None
 
 		## Symbol to Trade object mapping
 		self.trades = {}
+
+		## OrderId to Order mapping
+		self.orders = {}
 
 		## Reverse OrderID-Trade Mapping
 		self.order_ids = {}
@@ -104,6 +114,10 @@ class Manager(ManagerClient, mWrapper):
 
 		## Errors
 		self.wrapper.print_errors()
+
+	def now(self):
+
+		return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 	def on_close(self):
 

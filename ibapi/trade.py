@@ -9,6 +9,8 @@ class Trade(object):
 		self.num_filled = None
 		self.num_remaining = None
 
+		self.executed_ids = [orderId]
+
 		self.on_signal(contract, direction, order, orderId)
 
 		self.take_profit = {
@@ -35,63 +37,66 @@ class Trade(object):
 		self.direction = direction
 		self.init_order = order
 		self.init_order_id = orderId
-		self.isActive = False
+		self.is_active = False
 
-	def on_update(self):
+	def on_update(self, price, logger, manager):
 
-		if self.isActive:
+		self.latest_update = price
+		self.logger = logger
+		self.logger.warning('{} -- Price : {}'.format(self.symbol, price))
+
+		order = None
+
+		if self.is_active:
+
+			self.logger.warning('\nTrade is active')
 
 			if self.is_take_profit():
 
-				return 'Execute', self.take_profit['Order']
+				self.logger.warning('Taking Profit')
+				order = self.take_profit['Order']
 
 			elif self.is_soft_stop():
 
-				return 'Execute', self.soft_stop['Order']
+				self.logger.warning('Soft Stop')
+				order = self.soft_stop['Order']
 
 			elif self.is_hard_stop():
 
-				return 'Execute', self.hard_stop['Order']
-		
-		else:
+				self.logger.warning('Hard Stop')
+				order = self.hard_stop['Order']
 
-			dt = datetime.now() - self.init_time
+			if order is not None:
 
-			if dt.seconds >= 5 * 60 and self.num_filled == 0:
-				
-				return 'Cancel', self.init_order_id
+				manager.placeOrder(manager.order_id, self.contract, order)
 
-			elif dt.seconds >= 5 * 60 and self.num_filled != 0:
+				manager.order_ids[manager.order_id] = self
+				manager.orders[manager.order_id] = order
 
-				## Adjust take profit
-				self.take_profit['Order'].quantity = num_filled
+				self.executed_ids.append(manager.order_id)
 
-				## Adjust soft stop
-				self.soft_stop['Order'].quantity = num_filled
+				manager.reqIds(-1)
 
-				## Adjust hard stop
-				self.hard_stop['Order'].quantity = num_filled
-
-				## Set as active trade
-				self.is_active = True
-
-				return 'Partial', self.init_order_id
+				self.is_active = False
 
 	def on_fill(self):
 
 		## Set active flag
-		self.isActive = True
+		self.is_active = True
 		self.execution_time = datetime.now()
 
 	def is_take_profit(self):
 		
+		self.logger.warning('Take Profit {}'.format(self.direction * (self.latest_update - self.take_profit['Price'])))
 		return self.direction * (self.latest_update - self.take_profit['Price']) > 0
 
 	def is_soft_stop(self):
 
 		dt = datetime.now()
-		return dt.minute % 5 == 0 and dt.second == 0 and self.direction * (self.soft_stop['Price'] - self.latest_update) > 0		
+		self.logger.warning('Soft Stop {}'.format(self.direction * (self.soft_stop['Price'] - self.latest_update)))
+		return dt.minute % 1 == 0 and dt.second == 0 and self.direction * (self.soft_stop['Price'] - self.latest_update) > 0		
 
 	def is_hard_stop(self):
 		
+		self.logger.warning('Hard Stop {}'.format(self.direction * (self.hard_stop['Price'] - self.latest_update)))
 		return self.direction * (self.hard_stop['Price'] - self.latest_update) > 0
