@@ -34,13 +34,18 @@ class Trade(object):
 		## Place initial order
 		self.place_order(initial_order)
 
+		## Switches
+		self.soft_stop_switch = True
+		self.take_profit_switch = True
+		self.hard_stop_switch = True
+
 		## Placeholders
 		self.num_filled = 0
 		self.remaining = 0
 
 		## Period details
 		self.time_period = 1
-		self.maturity = 5
+		self.maturity = 1
 
 	def place_order(self, order):
 
@@ -87,7 +92,9 @@ class Trade(object):
 
 		if self.status == 'ACTIVE':
 
-			if self.is_soft_stop():
+			if self.is_soft_stop() and self.soft_stop_switch: 
+
+				print('SOFT STOP')
 
 				target = self.closing_details['soft_stop']
 				order = limit_order(action = self.closing_action, quantity = self.init_quantity,
@@ -95,7 +102,9 @@ class Trade(object):
 				self.place_order(order)
 				self.status = 'CLOSING'
 
-			elif self.is_hard_stop():
+			elif self.is_hard_stop() and self.hard_stop_switch:
+
+				print('HARD STOP')
 
 				hard_stop = self.closing_details['hard_stop']
 				order = limit_order(action = self.closing_action, quantity = self.init_quantity,
@@ -103,14 +112,29 @@ class Trade(object):
 				self.place_order(order)
 				self.status = 'CLOSING'
 
+			elif self.is_matured():
+
+				print('MATURITY')
+
+				if self.direction * (self.last_update - (self.init_order.lmtPrice - 2*self.manager.tick_increments[self.symbol])) >= 0:
+					factor = 1
+				else:
+					factor = -1
+
+				print(self.manager.adjust_price(self.last_update, self.manager.tick_increments[self.symbol], factor * self.direction, margin = False))
+				self.closing_details['hard_stop'] = self.manager.adjust_price(self.last_update, self.manager.tick_increments[self.symbol], factor * self.direction, margin = False)
+				self.soft_stop_switch = False
+
 		elif self.status == 'PENDING':
 			
 			if self.is_no_fill():
 
+				print('NO FILL')
+
 				self.on_close()
 
 		elif self.status == 'CLOSING':
-			pass	
+			pass
 
 	def is_take_profit(self):
 		

@@ -38,9 +38,9 @@ class ManagerClient(EClient):
 
 		## Closing details
 		closing_details = {
-			"take_profit" : price + (direction * tick_increment * 1),
-			"soft_stop" : price - (direction * tick_increment * 1),
-			"hard_stop" : price - (direction * tick_increment * 2)
+			"take_profit" : price + (direction * tick_increment * 4),
+			"soft_stop" : price - (direction * tick_increment * 4),
+			"hard_stop" : price - (direction * tick_increment * 8)
 		}
 
 		## Build Trade Object
@@ -56,10 +56,10 @@ class ManagerClient(EClient):
 		## Start market data for instrument
 		self.reqMktData(self.ticker_ids[symbol], contract, '', False, False, [])
 
-	def adjust_price(self, price, tick_incr, direction, base=5):
+	def adjust_price(self, price, tick_incr, direction, margin = True, base=5):
 
 		## Add a 1 tick buffer
-		price += tick_incr / base * direction
+		price += tick_incr / base * direction if margin else 0
 		
 		## Round the price
 		price = 0.1 + price / (tick_incr / base) * direction
