@@ -31,7 +31,7 @@ class Manager(ManagerClient, mWrapper):
 		self.logger.warning('Started: %s' % self.now())
 
 		## OrderID
-		self.order_id = None
+		self.order2trade = {}
 
 		## Symbol to Trade object mapping
 		self.trades = {}
