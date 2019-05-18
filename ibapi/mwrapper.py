@@ -30,7 +30,7 @@ class mWrapper(EWrapper):
 		self._errors.put(msg)
 
 	def nextValidId(self, orderId):
-		self.order_id = orderId
+		self.order_id = orderId + self.order_id_offset
 
 	def orderStatus(self, orderId, status, filled, remaining, avgFilledPrice, 
 					permId, parentId, lastFillPrice, clientId, whyHeld, mktCapPrice):
@@ -48,9 +48,6 @@ class mWrapper(EWrapper):
 				## Store the position filled
 				trade.num_filled = filled
 
-				## Store the remaining to be filled
-				trade.num_remaining = remaining
-
 				## Store the average cost of the position
 				trade.avg_fill_price = avgFilledPrice
 
@@ -63,9 +60,6 @@ class mWrapper(EWrapper):
 				## Store position filled on close
 				trade.num_filled_on_close = filled
 
-				## Increment the number of remaining
-				trade.num_remaining_on_close = remaining
-
 				if status == 'Filled':
 
 					## Close the trade
@@ -76,7 +70,7 @@ class mWrapper(EWrapper):
 
 	def tickPrice(self, tickerId, field, price, attribs):
 
-		trade = self.trades[self.id_tickers[tickerId]]
+		trade = self.trades[self.id2ticker[tickerId]]
 		if field == self.tick_types[trade.direction]:
 			trade.on_update(price)
 

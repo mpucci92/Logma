@@ -1,38 +1,40 @@
 from datetime import datetime
 from zorders import limit_order, limit_if_touched
+from utils import adjust_price
+
+from collections import namedtuple
+
+TradeOrders = namedtuple('TradeOrders', ['init_order', 'init_oid', 'profit_order', 'profit_oid', 'loss_order', 'loss_oid'])
 
 class Trade(object):
 
-	def __init__(self, manager, contract, action, initial_order, closing_details):
-
-		## Manager
-		self.manager = manager
+	def __init__(self, manager, symbol, action, initial_order, details):
 
 		## Start Time
 		self.init_time = datetime.now()
 
 		## Book keeping
-		self.contract = contract
-		self.symbol = contract.symbol + contract.currency
+		self.symbol = symbol
+		self.contract = manager.contracts[symbol]
 		self.action = action
 		self.direction = manager.action_directions[action]
 		self.closing_action = manager.closing_actions[action]
 
+		## Manager stuff
+		self.manager = manager
+		self.tick_incr = manager.tick_increments[self.symbol]
+
 		## Closing instructions
-		self.closing_details = closing_details
+		self.details = details
 
 		## Trade status
 		self.status = 'PENDING'
 
 		## Initial order
-		self.init_order = initial_order
 		self.init_quantity = initial_order.totalQuantity
 
-		## Keep track of placed orders
-		self.placed_orders = []
-
 		## Place initial order
-		self.place_order(initial_order)
+		self.setup(initial_order)
 
 		## Switches
 		self.soft_stop_switch = True
@@ -41,21 +43,41 @@ class Trade(object):
 
 		## Placeholders
 		self.num_filled = 0
-		self.remaining = 0
+		self.num_filled_on_close = 0
 
 		## Period details
 		self.time_period = 1
 		self.maturity = 1
 
-	def place_order(self, order):
+	def setup(self):
 
-		oid = self.manager.order_id
-		self.manager.placeOrder(oid, self.contract, order)
+		## Initial order
+		init_oid = self.manager.order_id
+		init_order = limit_order(action = action, quantity = quantity, 
+								 price = self.details['entry_price'], purpose = 'initiate')
+		self.manager.placeOrder(init_oid, self.contract, init_order)
+
+		## Take profit order
+		self.manager.order_id_offset += 1
+		profit_oid = init_oid + 1
+		profit_order = limit_order(action = self.closing_action, quantity = self.init_quantity,
+								   price = self.details['take_profit'], purpose = 'close')
+
+		## Stop loss order
+		self.manager.order_id_offset += 1
+		loss_oid = profit_oid + 1
+		loss_order = limit_order(action = self.closing_action, quantity = self.init_quantity,
+								   price = self.details['hard_stop'], purpose = 'close')
+
+		## Orders object for modifications
+		self.orders = TradeOrders(init_order = init_order, init_oid = init_oid, 
+								  profit_order = profit_order, profit_oid = profit_oid,
+								  loss_order = loss_order, loss_oid = loss_oid)
 		
 		## Book keeping
-		self.manager.orders[oid] = order
-		self.manager.order2trade[oid] = self
-		self.placed_orders.append((oid, order))
+		for order, oid in zip([init_order, profit_order, loss_order], [init_oid, profit_oid, loss_oid]):
+			self.manager.orders[oid] = order
+			self.manager.order2trade[oid] = self
 
 		## Get next ID
 		self.manager.reqIds(-1)
@@ -67,15 +89,13 @@ class Trade(object):
 		self.execution_time = datetime.now()
 
 		## Send closing orders
-		take_profit = self.closing_details['take_profit']
-		order = limit_order(action = self.closing_action, quantity = self.init_quantity,
-					        price = take_profit, purpose = 'close')
-		self.place_order(order)
+		self.manager.placeOrder(self.orders.profit_oid, self.contract, self.orders.profit_order)
 
 	def on_close(self):
 
 		## Clean up maps
-		for oid, order in self.placed_orders:
+		for i in range(1, len(self.orders), 2):
+			oid = self.orders[i]
 			del self.manager.order2trade[oid]
 			del self.manager.orders[oid]
 			self.manager.cancelOrder(oid)
@@ -86,43 +106,40 @@ class Trade(object):
 		## Cancel market data
 		self.manager.cancelMktData(self.manager.ticker_ids[self.symbol])
 
+	def update_and_send(self, adjusted_price):
+		
+		self.orders.loss_order.lmtPrice = adjusted_price
+		self.orders.loss_order.totalQuantity -= self.num_filled_on_close
+		self.manager.placeOrder(self.orders.loss_oid, self.contract, self.orders.loss_order)	
+
 	def on_update(self, price):
 
 		self.last_update = price
 
 		if self.status == 'ACTIVE':
 
-			if self.is_soft_stop() and self.soft_stop_switch: 
-
-				print('SOFT STOP')
-
-				target = self.closing_details['soft_stop']
-				order = limit_order(action = self.closing_action, quantity = self.init_quantity,
-									price = target, purpose = 'close')
-				self.place_order(order)
-				self.status = 'CLOSING'
-
-			elif self.is_hard_stop() and self.hard_stop_switch:
+			if self.is_hard_stop() and self.hard_stop_switch:
 
 				print('HARD STOP')
 
-				hard_stop = self.closing_details['hard_stop']
-				order = limit_order(action = self.closing_action, quantity = self.init_quantity,
-							        price = hard_stop, purpose = 'close')
-				self.place_order(order)
-				self.status = 'CLOSING'
+				adjust_price = adjust_price(self.last_update, self.tick_incr, self.direction, margin = 1)
+				if self.orders.loss_order.lmtPrice != adjusted_price:
+					self.update_and_send(adjusted_price)
+
+			elif self.is_soft_stop() and self.soft_stop_switch: 
+
+				print('SOFT STOP')
+
+				adjusted_price = adjust_price(self.last_update, self.tick_incr, self.direction, margin = 1)
+				if self.orders.loss_order.lmtPrice != adjusted_price:
+					self.update_and_send(adjusted_price)
 
 			elif self.is_matured():
 
 				print('MATURITY')
 
-				if self.direction * (self.last_update - (self.init_order.lmtPrice - 2*self.manager.tick_increments[self.symbol])) >= 0:
-					factor = 1
-				else:
-					factor = -1
-
-				print(self.manager.adjust_price(self.last_update, self.manager.tick_increments[self.symbol], factor * self.direction, margin = False))
-				self.closing_details['hard_stop'] = self.manager.adjust_price(self.last_update, self.manager.tick_increments[self.symbol], factor * self.direction, margin = False)
+				factor = 1 if self.is_in_profit() else -1
+				self.closing_details['hard_stop'] = adjust_price(self.last_update, self.tick_incr, factor * self.direction, margin = 1)
 				self.soft_stop_switch = False
 
 		elif self.status == 'PENDING':
@@ -135,6 +152,12 @@ class Trade(object):
 
 		elif self.status == 'CLOSING':
 			pass
+
+	## Action logic
+	def is_in_profit(self):
+
+		target = self.init_order.lmtPrice
+		return self.direction * (self.last_update - target) >= 0
 
 	def is_take_profit(self):
 		
@@ -163,4 +186,3 @@ class Trade(object):
 		dt = datetime.now()
 		delta = dt - self.init_time
 		return self.num_filled == 0 and delta.seconds >= self.time_period * 60
-

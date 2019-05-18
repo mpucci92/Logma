@@ -25,10 +25,8 @@ class Manager(ManagerClient, mWrapper):
 		mWrapper.__init__(self)
 		ManagerClient.__init__(self, self)
 
-		## Logging
-		self.logger = logging
-		self.logger.basicConfig(filename='manager.log', filemode='w')
-		self.logger.warning('Started: %s' % self.now())
+		## Reserve OrderIDs
+		self.order_id_offset = 0
 
 		## OrderID
 		self.order2trade = {}
@@ -79,7 +77,7 @@ class Manager(ManagerClient, mWrapper):
 		}
 
 		## Reverse mapping
-		self.id_tickers = {self.ticker_ids[key] : key for key in self.ticker_ids.keys()}
+		self.id2ticker = {self.ticker_ids[key] : key for key in self.ticker_ids.keys()}
 
 		## Tick Increments
 		self.tick_increments = {
@@ -98,6 +96,9 @@ class Manager(ManagerClient, mWrapper):
 			"AUDNZD" : 0.00005,
 			"CADJPY" : 0.005
 		}
+
+		## Contracts
+		self.contracts = {key : forex_contract(key[:3], key[3:]) for key in self.ticker_ids}
 
 		## Errors
 		self.init_errors() 
