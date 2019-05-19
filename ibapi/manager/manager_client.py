@@ -16,13 +16,13 @@ class ManagerClient(EClient):
 
 		EClient.__init__(self, wrapper = wrapper)
 
-	def on_signal(self, action, quantity, symbol, price):
+	def on_signal(self, direction, quantity, symbol, price):
 
 		## Tick increment
 		tick_increment = self.tick_increments[symbol]
 
 		## Direction
-		direction = self.action_directions[action]
+		action = self.direction2action[action]
 
 		## Adjust the price for min tick increment rule
 		price = adjust_price(price, tick_increment, direction, margin = 1)

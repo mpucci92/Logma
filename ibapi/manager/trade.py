@@ -16,8 +16,8 @@ class Trade(object):
 		## Book keeping
 		self.symbol = symbol
 		self.contract = manager.contracts[symbol]
-		self.action = action
-		self.direction = manager.action_directions[action]
+		self.direction = direction
+		self.action = manager.direction2action[direction]
 		self.closing_action = manager.closing_actions[action]
 
 		## Manager stuff
@@ -112,9 +112,7 @@ class Trade(object):
 		self.orders.loss_order.totalQuantity -= self.num_filled_on_close
 		self.manager.placeOrder(self.orders.loss_oid, self.contract, self.orders.loss_order)	
 
-	def on_update(self, price):
-
-		self.last_update = price
+	def on_period(self):
 
 		if self.status == 'ACTIVE':
 

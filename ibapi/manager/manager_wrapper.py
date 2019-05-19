@@ -72,7 +72,7 @@ class mWrapper(EWrapper):
 
 		trade = self.trades[self.id2ticker[tickerId]]
 		if field == self.tick_types[trade.direction]:
-			trade.on_update(price)
+			trade.last_update = price
 
 	def marketDataType(self, reqId, marketDataType):
 

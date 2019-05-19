@@ -8,14 +8,10 @@ from entropy import *
 from statsmodels.tsa.stattools import adfuller
 from sklearn.preprocessing import StandardScaler
 
-###################################################
-
-model_path = 'D:/AlgoMLData/Models/lgbm_2019-04-16'
-scaling_dir = 'D:/AlgoMLData/Scalers'
-
-###################################################
-
 class Model(object):
+
+    model_path = 'D:/AlgoMLData/Models/lgbm_2019-04-16'
+    scaling_dir = 'D:/AlgoMLData/Scalers'
     
     def __init__(self, ticker, candle_size, short_period, 
                  long_period, log_trim):
@@ -26,7 +22,7 @@ class Model(object):
         self.long_period = long_period
         self.log_trim = log_trim
         
-        with open('{}/{}'.format(scaling_dir, ticker), 'rb') as file:
+        with open('{}/{}'.format(Model.scaling_dir, ticker), 'rb') as file:
             self.scalers = joblib.load(file)
             
         self.load_model()
@@ -36,18 +32,9 @@ class Model(object):
         self.asia = {i : 1 - (i + 1) / 9 for i in range(0, 9)}
         self.asia[23] = 1
 
-    def push_data(self, bar):
-        
-        if bar is not None:
-            self.data.append(bar)
-        else:
-            self.data.append(self.data[-1])
-
-        self.data = self.data[-self.long_period:]
-
     def load_model(self):
         
-        with open(model_path, 'rb') as file:
+        with open(Model.model_path, 'rb') as file:
             self.predictor = joblib.load(file)
         
     def log_trimming(self, x):
@@ -78,11 +65,9 @@ class Model(object):
         
         return self.predictor.predict(X)
         
-    def is_trade(self, bar):
-        
-        self.push_data(bar)
+    def is_trade(self, data):
 
-        dfe = pd.DataFrame(self.data.copy(), columns=['Datetime', 'Open', 'High', 'Low', 'Close'])
+        dfe = pd.DataFrame(data.copy(), columns=['Datetime', 'Open', 'High', 'Low', 'Close'])
         df = dfe.iloc[1:, :].copy()
         
         df['Hour'] = pd.to_datetime(df.Datetime).dt.hour
@@ -166,8 +151,8 @@ class Model(object):
 
             feats[include] = self.scalers['ss'].transform([feats[include]])
 
-            return self.predict([feats])[0], feats
+            return self.predict([feats])[0], feats, direction, df.Close.values[-1]
 
         else:
 
-            return 0, []
+            return 0, [], 0, 0
