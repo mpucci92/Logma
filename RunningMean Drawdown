@@ -1,0 +1,45 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import  matplotlib.pyplot as plt
+import sys, os
+
+df = pd.read_csv('D:\\Pucci\\TickData_Agg\\EURUSD.csv')
+df_trades =  pd.read_csv('D:\\AddTrades\\EURUSD_trades.csv')
+
+idx_list = []
+for datetime in df_trades.Datetime:
+    idx = df[df.Datetime == datetime].index
+    idx_list.append((idx[0]))
+
+open_values = []
+close_values = []
+df_drawdown = []
+ttc_list = []
+
+for ttc in df_trades.TTC:
+    ttc_list.append(int(ttc))
+
+# Open values of when we get into a trade 
+for idx in idx_list:
+    open_value = df.get_value(idx, 'Open')
+    open_values.append(open_value)
+    #print(open_values)
+
+
+# close value has to stop at start: start + TTC value for the trade. 
+for i in range(len(idx_list)):
+    val = df.Close[idx_list[i]:(idx_list[i]+(ttc_list[i])):1]
+    #print(val)
+    #print (open_values[i])
+    drawdown = ((open_values[i] - val)/open_values[i])*100
+    df_drawdown.append(drawdown)
+    
+for idx in range(len(idx_list)):
+    trade_rollingmean = pd.Series(df_drawdown[idx])
+    val = trade_rollingmean.expanding().mean()
+    df_val = pd.Series.to_frame(val)
+    df_val.plot()
+    plt.show()
+
+# NOTE: EMPTY GRAPHS ARE 1 CANDLE TRADES OR LESS
